@@ -52,6 +52,17 @@ jobs:
             --version $TAG \
             --ref $GITHUB_REF \
             --commit $GITHUB_SHA
+            
+      - name: Setup Orchestrator app environment
+        continue-on-error: true
+        run: |
+          humctl create env ocp-luiz \
+            --token ${{ secrets.HUMANITEC_TOKEN }} \
+            --org ${{ vars.HUMANITEC_ORG_ID }} \
+            --type=development \
+            --name=ocp-dev \
+            --from=development
+            --app=${{ env.APP_NAME }}
 
       - name: Deploy using Score
         run: |
@@ -59,7 +70,7 @@ jobs:
             --token ${{ secrets.HUMANITEC_TOKEN }} \
             --org ${{ vars.HUMANITEC_ORG_ID }} \
             --app ${{ env.APP_NAME }} \
-            --env development \
+            --env ocp-dev \
             -f score.yaml \
             --extensions humanitec.score.yaml \
             --workload-source-url "https://github.com/${{ github.repository }}/blob/${{ github.ref_name }}/score.yaml" \
