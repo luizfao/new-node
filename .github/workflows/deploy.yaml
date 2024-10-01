@@ -16,7 +16,7 @@ env:
 
   HUMCTL_VERSION: '*'
   APP_NAME: new-node
-
+  APP_ENV: ocp-luiz
 
 jobs:
   deploy:
@@ -56,13 +56,13 @@ jobs:
       - name: Setup Orchestrator app environment
         continue-on-error: true
         run: |
-          humctl create env ocp-luiz \
+          humctl create env ${{ env.APP_ENV }} \
             --token ${{ secrets.HUMANITEC_TOKEN }} \
             --org ${{ vars.HUMANITEC_ORG_ID }} \
-            --type=development \
-            --name=ocp-dev \
-            --from=development
-            --app=${{ env.APP_NAME }}
+            --type development \
+            --name ${{ env.APP_ENV }} \
+            --from development \
+            --app ${{ env.APP_NAME }}
 
       - name: Deploy using Score
         run: |
@@ -70,7 +70,7 @@ jobs:
             --token ${{ secrets.HUMANITEC_TOKEN }} \
             --org ${{ vars.HUMANITEC_ORG_ID }} \
             --app ${{ env.APP_NAME }} \
-            --env ocp-dev \
+            --env ${{ env.APP_ENV }} \
             -f score.yaml \
             --extensions humanitec.score.yaml \
             --workload-source-url "https://github.com/${{ github.repository }}/blob/${{ github.ref_name }}/score.yaml" \
