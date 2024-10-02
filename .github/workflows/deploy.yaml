@@ -56,13 +56,10 @@ jobs:
       - name: Setup Orchestrator app environment
         continue-on-error: true
         run: |
-          humctl create env ${{ env.APP_ENV }} \
+          humctl api POST /orgs/${{ vars.HUMANITEC_ORG_ID }}/apps/${{ env.APP_NAME }}/envs \
             --token ${{ secrets.HUMANITEC_TOKEN }} \
             --org ${{ vars.HUMANITEC_ORG_ID }} \
-            --type development \
-            --name ${{ env.APP_ENV }} \
-            --from development \
-            --app ${{ env.APP_NAME }}
+            -d '{"id":"${{ env.APP_ENV }}","name":"${{ env.APP_ENV }}","type":"development"}'
 
       - name: Deploy using Score
         run: |
