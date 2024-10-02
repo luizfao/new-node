@@ -59,6 +59,7 @@ jobs:
           humctl api POST /orgs/${{ vars.HUMANITEC_ORG_ID }}/apps/${{ env.APP_NAME }}/envs \
             --token ${{ secrets.HUMANITEC_TOKEN }} \
             --org ${{ vars.HUMANITEC_ORG_ID }} \
+            -- fail \
             -d '{"id":"${{ env.APP_ENV }}","name":"${{ env.APP_ENV }}","type":"development"}'
 
       - name: Deploy using Score
